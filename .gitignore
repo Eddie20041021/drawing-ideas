@@ -1,0 +1,7 @@
+# 私人內容永遠不上傳（規則見 CLAUDE.md「公開分級」）
+private/
+inbox.md
+
+# 系統雜檔
+.DS_Store
+__pycache__/
