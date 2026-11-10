@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>規則｜作圖想法筆記</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="index.html">作圖想法筆記</a>
+  <nav><a href="index.html">全部想法</a><a href="elements.html">元素索引</a><a href="rules.html" aria-current="page">規則</a></nav>
+</header>
+<main>
+<article class="note rules"><h1 id="CLAUDE.md-—-作圖想法筆記">CLAUDE.md — 作圖想法筆記</h1>
+<p>這份文件是給 AI 看的工作規則。讀完之後，你應該知道：使用者丟來一段想法時，要怎麼把它變成一則格式正確的筆記、放在哪裡、怎麼確認沒有出錯。</p>
+<h2 id="專案目的">專案目的</h2>
+<p>記錄「想畫的畫面」，並且看得出哪些元素已經用過、哪些還沒試過。</p>
+<p>使用者用 AI 產圖時，最麻煩的是每次都要重新想背景、服裝、要發生什麼事，也記不得哪些組合畫過了。所以每則想法都拆成固定的四個部分：</p>
+<div class="table-wrap"><table><thead><tr><th>部分</th><th>性質</th><th>例子</th></tr></thead><tbody><tr><td>背景</td><td><strong>具體</strong>，只能用詞庫的詞</td><td>辦公室、街道上、公園內</td></tr><tr><td>服裝</td><td><strong>具體</strong>，只能用詞庫的詞</td><td>正裝、居家服</td></tr><tr><td>事件</td><td><strong>具體</strong>，只能用詞庫的詞</td><td>散步、吃飯</td></tr><tr><td>概念</td><td><strong>不用具體</strong>，自由的一句話</td><td>天氣變冷了、東西弄丟</td></tr></tbody></table></div>
+<p>前三個是畫面上看得到的東西，網站會自動整理出「元素索引」：每個詞用過幾次、出現在哪裡、詞庫裡還有哪些沒用過。概念是這張圖想表達的感覺或主題，可以很模糊，不進詞庫、不統計次數。</p>
+<p>網站是給使用者自己看的靈感筆記本，不是作品集。</p>
+<h2 id="你最常被要求做的事">你最常被要求做的事</h2>
+<p>使用者會用兩種方式丟想法給你，兩種都要接得住：</p>
+<p><strong>一、一句口語的話</strong></p>
+<blockquote>下雨天在超商門口等雨停那種感覺，外面很暗裡面很亮</blockquote>
+<p>由你拆出背景、服裝、事件、概念。</p>
+<p><strong>二、直接給欄位</strong></p>
+<blockquote>背景 辦公室　服裝 正裝　事件 吃飯　概念 天氣變冷了</blockquote>
+<p>照使用者給的填，不要改詞、不要自己加。沒給的欄位：背景、服裝、事件寫 <code>[]</code>，概念寫「待定」；你想到的候選放進 <code>AI 補充</code>。</p>
+<p>不管哪一種，<code>原話</code> 都照使用者打的內容原樣保留，然後照下面「新增一則筆記」的步驟走完，最後跑 <code>python3 build.py</code> 確認通過。</p>
+<h2 id="目錄結構">目錄結構</h2>
+<div class="table-wrap"><table><thead><tr><th>路徑</th><th>內容</th><th>能不能手動改</th></tr></thead><tbody><tr><td><code>notes/&lt;slug&gt;.md</code></td><td>公開筆記，一則想法一個檔</td><td>可以</td></tr><tr><td><code>private/</code></td><td>私人筆記與 <code>inbox.md</code>（碎念暫存），已列在 <code>.gitignore</code></td><td>可以，但永遠不能上傳</td></tr><tr><td><code>vocab.json</code></td><td>元素詞庫，背景、服裝、事件各一個清單</td><td>可以，照「詞庫規則」</td></tr><tr><td><code>assets/</code></td><td>網站的 CSS 與 JS</td><td>只有改版面時才動</td></tr><tr><td><code>build.py</code></td><td>檢查規則並產生網站</td><td>只有改功能時才動</td></tr><tr><td><code>docs/</code></td><td>產出的網站（GitHub Pages 從這裡發佈）</td><td><strong>不能</strong>，一律由 <code>build.py</code> 重新產生</td></tr><tr><td><code>log.md</code></td><td>每次修改的紀錄</td><td>只能往下加，不改舊紀錄</td></tr></tbody></table></div>
+<h2 id="筆記格式">筆記格式</h2>
+<p>檔案開頭是 front matter，欄位一個都不能少：</p>
+<pre><code>---
+title: 便利商店門口躲雨
+slug: rain-konbini
+status: 想法
+visibility: 公開
+created: 2026-11-10
+updated: 2026-11-10
+summary: 突然下大雨，主角站在便利商店屋簷下，看著外面發呆。
+背景: [便利商店, 街道上]
+服裝: [制服]
+事件: [躲雨]
+概念: 外面很暗、裡面很亮
+---</code></pre>
+<ul><li><code>title</code>：畫面的名字，10 字左右，講畫面不講技術（「便利商店門口躲雨」，不是「室內外光線對比練習」）</li><li><code>slug</code>：小寫英文、數字、連字號，同時也是檔名</li><li><code>status</code>：只能是 <code>想法</code>、<code>試畫中</code>、<code>完成</code>、<code>放下</code> 其中一個</li><li><code>visibility</code>：<code>notes/</code> 裡一律是 <code>公開</code></li><li><code>created</code> / <code>updated</code>：<code>YYYY-MM-DD</code></li><li><code>summary</code>：一句話描述畫面，60 字以內</li><li><code>背景</code>、<code>服裝</code>、<code>事件</code>：寫成清單，只能用 <code>vocab.json</code> 裡的詞，用不到就寫 <code>[]</code>，不能省略</li><li><code>概念</code>：一句話，不加 <code>[ ]</code>，30 字以內，不能空白（見下方「概念的寫法」）</li></ul>
+<p>front matter 之後，段落依序是下面六個，標題文字和順序都不能改：</p>
+<div class="table-wrap"><table><thead><tr><th>段落</th><th>寫什麼</th></tr></thead><tbody><tr><td><code>## 原話</code></td><td>使用者原本說的話，用 <code>&gt;</code> 引用，<strong>一字不改</strong></td></tr><tr><td><code>## 畫面</code></td><td>把原話整理成具體的畫面描述：誰、在哪、做什麼、重點是什麼</td></tr><tr><td><code>## Prompt 草稿</code></td><td>英文 prompt，放在 ``` 程式碼區塊裡</td></tr><tr><td><code>## 試畫紀錄</code></td><td>每次試畫一行，<code>- YYYY-MM-DD：結果與觀察</code>。還沒畫就寫「（還沒畫）」</td></tr><tr><td><code>## 下一步</code></td><td>接下來要試什麼，條列</td></tr><tr><td><code>## AI 補充</code></td><td>你自己的建議都放這裡</td></tr></tbody></table></div>
+<h2 id="最重要的規則：使用者的想法和你的想法要分開">最重要的規則：使用者的想法和你的想法要分開</h2>
+<ul><li><code>原話</code> 只能放使用者說的話，不能潤飾、不能補字</li><li><code>畫面</code> 只能整理使用者說過的內容，不能加使用者沒提到的元素</li><li>你想到的點子、技巧、替代方案，<strong>全部</strong>放進 <code>AI 補充</code></li><li>原話太模糊、你需要猜的時候，在 <code>AI 補充</code> 寫「我把 X 理解成 Y，不對請告訴我」，不要直接當成事實寫進 <code>畫面</code></li></ul>
+<p>這條規則存在的原因：筆記本的價值是記錄使用者自己的想法。AI 補的東西混進去，之後就分不出哪些是自己想的。</p>
+<h2 id="概念的寫法">概念的寫法</h2>
+<p>概念是「這張圖想表達什麼」，刻意保留模糊，不要把它寫成具體元素。</p>
+<ul><li>好的概念：「天氣變冷了」、「東西弄丟」、「等待」、「夏天快要結束了」、「外面很暗、裡面很亮」</li><li>不好的概念：「制服女孩在超商躲雨」（這是畫面，不是概念）、「逆光＋背影」（這是技法）</li><li>使用者的原話裡如果沒有明顯的概念，從原話裡挑最接近感覺的那幾個字；真的沒有，就在 <code>AI 補充</code> 提一兩個候選，<code>概念</code> 先寫「待定」</li><li>概念不進詞庫、不統計次數；元素索引頁的最下面會列出所有概念，方便回頭看自己常想畫什麼</li></ul>
+<h2 id="詞庫規則（vocab.json）">詞庫規則（vocab.json）</h2>
+<p><code>背景</code>、<code>服裝</code>、<code>事件</code> 只能用 <code>vocab.json</code> 裡有的詞，<code>build.py</code> 會擋下不在詞庫的詞。</p>
+<ol><li>先找詞庫裡有沒有意思相同的詞，有就用既有的，不要新造同義詞（已經有「黃昏」就不要再加「夕陽」）</li><li>真的沒有，才把新詞加進 <code>vocab.json</code> 對應的維度，加在清單最後</li><li>一個詞只放在一個維度。拿不準時這樣分：</li></ol>
+<ul><li><strong>背景</strong>：在哪裡，寫地點（「辦公室」、「公園內」）。天氣、時間不進背景，寫在畫面描述裡</li><li><strong>服裝</strong>：穿的是哪一類衣服（「正裝」、「居家服」）。雨傘、包包這類配件不進詞庫，寫在畫面描述裡</li><li><strong>事件</strong>：畫面裡正在發生的事，包含人物的動作（「吃飯」、「散步」、「回頭」）</li><li>看了會有什麼感覺、想表達什麼，那是<strong>概念</strong>，不是元素，不要加進詞庫</li></ul>
+<ol><li>詞要短，2～5 字。粒度以使用者自己給過的詞為準：背景是「辦公室」這種地點，服裝是「正裝」這種類型，不要細到單一品項或顏色</li><li>不刪除詞庫裡的詞，就算沒有筆記在用。元素索引會把它列在「還沒用過」，那本來就是用來找靈感的</li></ol>
+<h2 id="公開分級">公開分級</h2>
+<p>GitHub 上的內容任何人都看得到，所以預設是<strong>私人</strong>。</p>
+<ul><li>使用者沒有明講「公開」，新筆記一律放 <code>private/</code>，<code>visibility: 私人</code></li><li>只有使用者明講要公開，才放 <code>notes/</code></li><li>從私人改成公開之前，先做「公開前檢查」：</li><li>不能出現使用者經營中的原創角色名字或專屬設定，公開筆記一律用「主角」稱呼</li><li>不能出現真人名字、學校、地址等個人資訊</li><li>不能在 prompt 裡用在世畫師的名字當風格</li><li>圖片只能放使用者自己產生的圖，不能放別人的作品</li><li>任何情況下都不能把 <code>private/</code> 的內容複製、摘要或引用到 <code>notes/</code>、<code>docs/</code>、<code>log.md</code> 或 commit 訊息裡</li></ul>
+<h2 id="Prompt-草稿規則">Prompt 草稿規則</h2>
+<ul><li>英文，一段話或逗號分隔都可以</li><li>順序：主角與服裝 → 事件 → 背景 → 最後用一兩個形容氣氛的詞帶出概念</li><li>概念不要直譯成 prompt（模型看不懂「夏天快要結束了」），改成畫面上看得到的暗示，寫在 <code>AI 補充</code> 讓使用者挑</li><li>不寫在世畫師的名字、不寫真人名字、不寫作品或角色的名字</li><li>已知會出錯的地方（例如回頭角度容易畫過頭），解法寫在 <code>AI 補充</code>，不要直接塞進 prompt</li></ul>
+<h2 id="狀態怎麼改">狀態怎麼改</h2>
+<div class="table-wrap"><table><thead><tr><th>狀態</th><th>什麼時候用</th></tr></thead><tbody><tr><td>💡 想法</td><td>剛記下來，還沒畫</td></tr><tr><td>🎨 試畫中</td><td>至少畫過一次，還在調整</td></tr><tr><td>✅ 完成</td><td>使用者說滿意了</td></tr><tr><td>🗄 放下</td><td>使用者說先不畫了。保留筆記，不要刪</td></tr></tbody></table></div>
+<ul><li>每次改狀態或加試畫紀錄，都要把 <code>updated</code> 改成當天</li><li><code>試畫紀錄</code> 只能往下加，不能改寫舊的紀錄，失敗的紀錄也要留著</li><li>狀態由使用者決定，你不能自己把想法標成「完成」</li></ul>
+<h2 id="圖片">圖片</h2>
+<ul><li>放在 <code>assets/notes/&lt;slug&gt;/</code>，檔名用 <code>01.webp</code>、<code>02.webp</code> 依序編號</li><li>在 <code>試畫紀錄</code> 那一行後面用 <code>![描述](../assets/notes/&lt;slug&gt;/01.webp)</code> 插入</li><li>單張 500 KB 以內，太大先壓縮</li></ul>
+<h2 id="新增一則筆記的步驟">新增一則筆記的步驟</h2>
+<ol><li>讀使用者的原話，決定 <code>title</code>、<code>slug</code>、<code>summary</code></li><li>把原話拆成背景、服裝、事件，每個詞都先對照 <code>vocab.json</code>（照詞庫規則）；再寫一句概念（照概念的寫法）</li><li>問自己：使用者有沒有說要公開？沒有就放 <code>private/</code></li><li>照「筆記格式」寫檔，原話一字不改</li><li>跑 <code>python3 build.py</code></li><li>建置時如果出現「可能重複」，在 <code>AI 補充</code> 寫出跟哪一則很像、差在哪裡，讓使用者決定要合併還是分開</li><li>在 <code>log.md</code> 最下面加一行</li><li>跟使用者回報：新增了哪一則、用了哪些新詞、有沒有疑似重複</li></ol>
+<p>修改既有筆記時一樣要做第 5、7、8 步。</p>
+<h2 id="建置與檢查">建置與檢查</h2>
+<pre><code>python3 build.py</code></pre>
+<p>只用 Python 標準函式庫，不需要安裝任何套件。它會檢查：</p>
+<ul><li>每個欄位都有、格式正確、檔名等於 slug</li><li>狀態是四種之一，日期格式正確，<code>updated</code> 不早於 <code>created</code></li><li>背景、服裝、事件的詞都在詞庫裡；概念是一句話、不空白、30 字以內</li><li>六個段落都在，順序正確</li><li><code>notes/</code> 裡沒有私人筆記</li><li>slug 不重複</li></ul>
+<p>有任何一項沒過，它會列出原因並停止，<code>docs/</code> 不會更新。<strong>不要為了讓建置通過而去改 <code>build.py</code> 的檢查</strong>，要改的是筆記本身。通過後會產生首頁、每則筆記的頁面、元素索引，以及這份規則的網頁版。</p>
+<h2 id="網站風格">網站風格</h2>
+<ul><li>乾淨、極簡、大量留白，重點是文字</li><li>所有顏色都定義在 <code>assets/style.css</code> 的 <code>:root</code> 變數裡，新樣式沿用變數，不另外寫死顏色</li><li>狀態顏色固定：想法黃、試畫中紫、完成綠、放下灰</li><li>概念一律用斜體淡色顯示，跟具體元素的標籤區分開</li><li>支援深色模式（跟隨系統設定），手機版也要能正常閱讀</li><li>不加動畫、不加外部字型、不引入任何外部 JavaScript 函式庫</li></ul>
+<h2 id="log.md-格式">log.md 格式</h2>
+<pre><code>- 2026-11-10 新增 rain-konbini（想法）；詞庫新增：背景「街道上」</code></pre>
+<p>一次修改一行，寫做了什麼、動到哪些詞。不寫私人筆記的內容。</p>
+<h2 id="不能做的事">不能做的事</h2>
+<ul><li>手動修改 <code>docs/</code></li><li>把 <code>private/</code> 的任何內容放到會上傳的地方</li><li>修改或潤飾 <code>原話</code></li><li>刪除筆記、刪除詞庫裡的詞、刪除舊的試畫紀錄</li><li>替使用者決定狀態</li><li>為了通過建置而放寬 <code>build.py</code> 的檢查</li></ul></article>
+</main>
+<footer class="site">依 <a href="rules.html">CLAUDE.md</a> 的規則建置 · 2026-11-10</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>
